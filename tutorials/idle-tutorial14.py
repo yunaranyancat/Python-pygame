@@ -3,7 +3,7 @@ import time
 #adding text to screen
 
 pygame.init()
-white = (255,255,255) 
+white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
 
@@ -25,12 +25,12 @@ clock = pygame.time.Clock()
 block_size = 10
 FPS = 30
 
-font = pygame.font.SysFont(None, 25) #(,size) , 
+font = pygame.font.SysFont(None, 25) #(,size) ,
 
 def message_to_screen(msg,color):
     screen_text = font.render(msg, True, color)
     gameDisplay.blit(screen_text, [display_width/2,display_height/2])
-    
+
 while not gameExit:
     # event
     for event in pygame.event.get():
@@ -52,14 +52,14 @@ while not gameExit:
 
     if lead_x >= display_width or lead_x <= 0 or lead_y >= display_height or lead_y <= 0:
         gameExit =True
-        
+
     #logic
     lead_x += lead_x_change
     lead_y += lead_y_change
 
     #graphic rendering
     gameDisplay.fill(white)
-    pygame.draw.rect(gameDisplay, black,[lead_x,lead_y,10,10])
+    pygame.draw.rect(gameDisplay, black,[lead_x,lead_y,block_size,block_size])
 
     #update
     pygame.display.update()

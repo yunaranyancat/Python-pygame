@@ -4,7 +4,7 @@ import random
 #Adding an apple
 
 pygame.init()
-white = (255,255,255) 
+white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
 
@@ -38,13 +38,13 @@ def gameLoop():
 
     randAppleX = random.randrange(0, display_width-block_size)
     randAppleY = random.randrange(0, display_height-block_size)
-    
+
     while not gameExit:
         while gameOver == True:
             gameDisplay.fill(white)
             message_to_screen("Game over, press C to play again or Q to quit", red)
             pygame.display.update()
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
@@ -72,17 +72,17 @@ def gameLoop():
 
         if lead_x >= display_width or lead_x <= 0 or lead_y >= display_height or lead_y <= 0:
             gameOver=True
-            
+
         lead_x += lead_x_change
         lead_y += lead_y_change
 
         gameDisplay.fill(white)
         pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
-        pygame.draw.rect(gameDisplay, black,[lead_x,lead_y,10,10])
+        pygame.draw.rect(gameDisplay, black,[lead_x,lead_y,block_size,block_size])
         pygame.display.update()
 
         clock.tick(FPS)
-        
+
     pygame.quit()
     quit()
 

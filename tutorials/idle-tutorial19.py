@@ -1,11 +1,13 @@
 import pygame
 import time
-#GAME OVER functionality
+import random
+#snake length rules
 
 pygame.init()
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
+green = (0,155,0)
 
 display_width = 800
 display_height = 600
@@ -19,7 +21,11 @@ clock = pygame.time.Clock()
 block_size = 10
 FPS = 30
 
-font = pygame.font.SysFont(None, 25) #(,size) ,
+font = pygame.font.SysFont(None, 25)
+
+def snake(block_size,snakeList):
+    for XnY in snakeList:
+        pygame.draw.rect(gameDisplay, green,[XnY[0],XnY[1],block_size,block_size])
 
 def message_to_screen(msg,color):
     screen_text = font.render(msg, True, color)
@@ -35,8 +41,10 @@ def gameLoop():
     lead_x_change = 0
     lead_y_change = 0
 
+    randAppleX = random.randrange(0, display_width-block_size,block_size)
+    randAppleY = random.randrange(0, display_height-block_size,block_size)
+
     while not gameExit:
-        # event
         while gameOver == True:
             gameDisplay.fill(white)
             message_to_screen("Game over, press C to play again or Q to quit", red)
@@ -70,16 +78,26 @@ def gameLoop():
         if lead_x >= display_width or lead_x <= 0 or lead_y >= display_height or lead_y <= 0:
             gameOver=True
 
-        #logic
         lead_x += lead_x_change
         lead_y += lead_y_change
 
-        #graphic rendering
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay, black,[lead_x,lead_y,block_size,block_size])
+        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
 
-        #update
+
+        snakeList = []
+        snakeHead = []
+        snakeHead.append(lead_x)
+        snakeHead.append(lead_y)
+        snakeList.append(snakeHead)
+        
+        snake(block_size,snakeList)
         pygame.display.update()
+        
+        
+        if lead_x == randAppleX and lead_y == randAppleY:
+            randAppleX = random.randrange(0, display_width-block_size,block_size)
+            randAppleY = random.randrange(0, display_height-block_size,block_size)
 
         clock.tick(FPS)
 
