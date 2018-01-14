@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-#snake functionality
+#Lenghten the snake/manage crashing to its tail
 
 pygame.init()
 white = (255,255,255)
@@ -42,7 +42,7 @@ def gameLoop():
     lead_y_change = 0
 
     snakeList = []
-    snakeLength = 10
+    snakeLength = 1
 
     randAppleX = random.randrange(0, display_width-block_size,block_size)
     randAppleY = random.randrange(0, display_height-block_size,block_size)
@@ -95,6 +95,11 @@ def gameLoop():
 
         if len(snakeList) > snakeLength:
             del snakeList[0]
+
+        for eachCoord in snakeList[:-1]: #all coordinates in the list but excluding the head coord
+            if eachCoord == snakeHead:
+                gameOver = True
+            
             
         snake(block_size,snakeList)
         pygame.display.update()
@@ -103,7 +108,8 @@ def gameLoop():
         if lead_x == randAppleX and lead_y == randAppleY:
             randAppleX = random.randrange(0, display_width-block_size,block_size)
             randAppleY = random.randrange(0, display_height-block_size,block_size)
-
+            snakeLength+=1
+            
         clock.tick(FPS)
 
     pygame.quit()
