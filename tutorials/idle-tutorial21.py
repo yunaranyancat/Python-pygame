@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-#Lenghten the snake/manage crashing to its tail
+#increase apple size/thickness
 
 pygame.init()
 white = (255,255,255)
@@ -85,7 +85,9 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
+
+        AppleThickness = 30
+        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,AppleThickness,AppleThickness])
 
 
         snakeHead = []
@@ -105,11 +107,17 @@ def gameLoop():
         pygame.display.update()
         
         
-        if lead_x == randAppleX and lead_y == randAppleY:
-            randAppleX = random.randrange(0, display_width-block_size,block_size)
-            randAppleY = random.randrange(0, display_height-block_size,block_size)
-            snakeLength+=1
-            
+##        if lead_x == randAppleX and lead_y == randAppleY:
+##            randAppleX = random.randrange(0, display_width-block_size,block_size)
+##            randAppleY = random.randrange(0, display_height-block_size,block_size)
+##            snakeLength+=1
+
+        if lead_x >= randAppleX and lead_x < randAppleX + AppleThickness:
+            if lead_y >= randAppleY and lead_y < randAppleY + AppleThickness:
+                randAppleX = random.randrange(0, display_width-block_size,block_size)
+                randAppleY = random.randrange(0, display_height-block_size,block_size)
+                snakeLength+=1
+
         clock.tick(FPS)
 
     pygame.quit()
