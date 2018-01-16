@@ -1,7 +1,8 @@
 import pygame
 import time
 import random
-#lenghten the snake
+#Free movement of snake and spawning of apple without depending on each other
+#Collision detection
 
 pygame.init()
 white = (255,255,255)
@@ -14,7 +15,6 @@ display_height = 600
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Slither')
-
 
 clock = pygame.time.Clock()
 
@@ -44,8 +44,8 @@ def gameLoop():
     snakeList = []
     snakeLength = 1
 
-    randAppleX = random.randrange(0, display_width-block_size,block_size)
-    randAppleY = random.randrange(0, display_height-block_size,block_size)
+    randAppleX = random.randrange(0, display_width-block_size)
+    randAppleY = random.randrange(0, display_height-block_size)
 
     while not gameExit:
         while gameOver == True:
@@ -54,6 +54,9 @@ def gameLoop():
             pygame.display.update()
 
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameOver = False
+                    gameExit = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         gameExit = True
@@ -85,8 +88,9 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
 
+        AppleThickness = 30
+        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,AppleThickness,AppleThickness])
 
         snakeHead = []
         snakeHead.append(lead_x)
@@ -103,10 +107,24 @@ def gameLoop():
         snake(block_size,snakeList)
         pygame.display.update()
 
-        if lead_x == randAppleX and lead_y == randAppleY:
-            randAppleX = random.randrange(0, display_width-block_size,block_size)
-            randAppleY = random.randrange(0, display_height-block_size,block_size)
-            snakeLength += 1
+##        if lead_x >= randAppleX and lead_x < randAppleX + AppleThickness:
+##            if lead_y >= randAppleY and lead_y < randAppleY + AppleThickness:
+##                randAppleX = random.randrange(0, display_width-block_size)
+##                randAppleY = random.randrange(0, display_height-block_size)
+##                snakeLength+=1
+
+##        if lead_x > randAppleX and lead_x < randAppleX + AppleThickness or lead_x + block_size > randAppleX and lead_x + block_size < randAppleX + AppleThickness:
+##            if lead_y randAppleY and lead_y < randAppleY + AppleThickness or lead_y + block_size > randAppleY and lead_x + block_size < randAppleY + AppleThickness:
+
+#advanced / simpler version
+        if lead_x > randAppleX - block_size:
+            if lead_y >= randAppleY - block_size:
+                if lead_x < randAppleX + AppleThickness:
+                    if lead_y < randAppleY + AppleThickness:
+                        randAppleX = random.randrange(0, display_width-block_size)
+                        randAppleY = random.randrange(0, display_height-block_size)
+                        snakeLength+=1
+
         clock.tick(FPS)
 
     pygame.quit()

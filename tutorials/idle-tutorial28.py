@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-#lenghten the snake
+#Drawing snake head
 
 pygame.init()
 white = (255,255,255)
@@ -15,10 +15,9 @@ display_height = 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Slither')
 
-
 clock = pygame.time.Clock()
 
-block_size = 10
+block_size = 20
 FPS = 30
 
 font = pygame.font.SysFont(None, 25)
@@ -27,9 +26,16 @@ def snake(block_size,snakeList):
     for XnY in snakeList:
         pygame.draw.rect(gameDisplay, green,[XnY[0],XnY[1],block_size,block_size])
 
+def text_objects(text,color):
+    textSurface = font.render(text, True, color)
+    return textSurface, textSurface.get_rect()
+    
 def message_to_screen(msg,color):
-    screen_text = font.render(msg, True, color)
-    gameDisplay.blit(screen_text, [display_width/2,display_height/2])
+    textSurf, textRect = text_objects(msg,color)
+    textRect.center = (display_width/2),(display_height /2)
+    gameDisplay.blit(textSurf,textRect) #pygame.org/docs/ref/surface.html
+##    screen_text = font.render(msg, True, color)
+##    gameDisplay.blit(screen_text, [display_width/2 - screen_text.get_width()/2,display_height/2 - screen_text.get_height()/2])
 
 def gameLoop():
     gameExit = False
@@ -44,8 +50,8 @@ def gameLoop():
     snakeList = []
     snakeLength = 1
 
-    randAppleX = random.randrange(0, display_width-block_size,block_size)
-    randAppleY = random.randrange(0, display_height-block_size,block_size)
+    randAppleX = random.randrange(0, display_width-block_size)
+    randAppleY = random.randrange(0, display_height-block_size)
 
     while not gameExit:
         while gameOver == True:
@@ -54,6 +60,9 @@ def gameLoop():
             pygame.display.update()
 
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameOver = False
+                    gameExit = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         gameExit = True
@@ -85,8 +94,9 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
 
+        AppleThickness = 30
+        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,AppleThickness,AppleThickness])
 
         snakeHead = []
         snakeHead.append(lead_x)
@@ -103,10 +113,14 @@ def gameLoop():
         snake(block_size,snakeList)
         pygame.display.update()
 
-        if lead_x == randAppleX and lead_y == randAppleY:
-            randAppleX = random.randrange(0, display_width-block_size,block_size)
-            randAppleY = random.randrange(0, display_height-block_size,block_size)
-            snakeLength += 1
+        if lead_x > randAppleX - block_size:
+            if lead_y >= randAppleY - block_size:
+                if lead_x < randAppleX + AppleThickness:
+                    if lead_y < randAppleY + AppleThickness:
+                        randAppleX = random.randrange(0, display_width-block_size)
+                        randAppleY = random.randrange(0, display_height-block_size)
+                        snakeLength+=1
+
         clock.tick(FPS)
 
     pygame.quit()

@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-#lenghten the snake
+#Fixing exit game
 
 pygame.init()
 white = (255,255,255)
@@ -54,6 +54,9 @@ def gameLoop():
             pygame.display.update()
 
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameOver = False
+                    gameExit = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         gameExit = True
@@ -85,7 +88,9 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,block_size,block_size])
+
+        AppleThickness = 30
+        pygame.draw.rect(gameDisplay,red,[randAppleX,randAppleY,AppleThickness,AppleThickness])
 
 
         snakeHead = []
@@ -99,14 +104,23 @@ def gameLoop():
         for eachCoord in snakeList[:-1]: #all coordinates in the list but excluding the head coord
             if eachCoord == snakeHead:
                 gameOver = True
-
+            
+            
         snake(block_size,snakeList)
         pygame.display.update()
+        
+        
+##        if lead_x == randAppleX and lead_y == randAppleY:
+##            randAppleX = random.randrange(0, display_width-block_size,block_size)
+##            randAppleY = random.randrange(0, display_height-block_size,block_size)
+##            snakeLength+=1
 
-        if lead_x == randAppleX and lead_y == randAppleY:
-            randAppleX = random.randrange(0, display_width-block_size,block_size)
-            randAppleY = random.randrange(0, display_height-block_size,block_size)
-            snakeLength += 1
+        if lead_x >= randAppleX and lead_x < randAppleX + AppleThickness:
+            if lead_y >= randAppleY and lead_y < randAppleY + AppleThickness:
+                randAppleX = random.randrange(0, display_width-block_size,block_size)
+                randAppleY = random.randrange(0, display_height-block_size,block_size)
+                snakeLength+=1
+
         clock.tick(FPS)
 
     pygame.quit()
