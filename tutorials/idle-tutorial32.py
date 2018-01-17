@@ -1,7 +1,7 @@
 import pygame
 import time
 import random
-#Drawing snake head
+#Updating menus and font type/size
 
 pygame.init()
 white = (255,255,255)
@@ -15,29 +15,52 @@ display_height = 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Slither')
 
+img = pygame.image.load('./extras/snake_head.png')
+
+
 clock = pygame.time.Clock()
 
 block_size = 20
-FPS = 30
+FPS = 15
 
-font = pygame.font.SysFont(None, 25)
+direction = 2 # {0:right,1:left,2:up,3:down}
+
+smallfont = pygame.font.SysFont("comicsansms", 25) #or pygame.font.Font(ttf file/download)
+medfont = pygame.font.SysFont("comicsansms", 50)
+largefont = pygame.font.SysFont("comicsansms", 80)
 
 def snake(block_size,snakeList):
-    for XnY in snakeList:
+
+    if direction == 0:
+        head = pygame.transform.rotate(img, 270)
+    elif direction == 1:
+        head = pygame.transform.rotate(img, 90)
+    elif direction == 2:
+        head = img
+    else:
+        head = pygame.transform.rotate(img, 180)
+
+    gameDisplay.blit(head, (snakeList[-1][0], snakeList[-1][1]))
+    
+    for XnY in snakeList[:-1]:
         pygame.draw.rect(gameDisplay, green,[XnY[0],XnY[1],block_size,block_size])
 
-def text_objects(text,color):
-    textSurface = font.render(text, True, color)
+def text_objects(text,color,size):
+    if size == "small":
+        textSurface = smallfont.render(text, True, color)
+    if size == "medium":
+        textSurface = medfont.render(text, True, color)
+    if size == "large":
+        textSurface = largefont.render(text, True, color)
     return textSurface, textSurface.get_rect()
     
-def message_to_screen(msg,color):
-    textSurf, textRect = text_objects(msg,color)
-    textRect.center = (display_width/2),(display_height /2)
-    gameDisplay.blit(textSurf,textRect) #pygame.org/docs/ref/surface.html
-##    screen_text = font.render(msg, True, color)
-##    gameDisplay.blit(screen_text, [display_width/2 - screen_text.get_width()/2,display_height/2 - screen_text.get_height()/2])
-
+def message_to_screen(msg,color,y_displace=0,size="small"):
+    textSurf, textRect = text_objects(msg,color,size)
+    textRect.center = (display_width/2),(display_height /2)+y_displace
+    gameDisplay.blit(textSurf,textRect) 
+    
 def gameLoop():
+    global direction
     gameExit = False
     gameOver = False
 
@@ -56,7 +79,14 @@ def gameLoop():
     while not gameExit:
         while gameOver == True:
             gameDisplay.fill(white)
-            message_to_screen("Game over, press C to play again or Q to quit", red)
+            message_to_screen("Game over",
+                              red,
+                              y_displace=-15,
+                              size="large")
+            message_to_screen("Press C to play again or Q to quit",
+                              black,
+                              50,
+                              size="medium")
             pygame.display.update()
 
             for event in pygame.event.get():
@@ -75,15 +105,19 @@ def gameLoop():
                 gameExit = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
+                    direction = 1
                     lead_x_change = -block_size
                     lead_y_change = 0
                 elif event.key == pygame.K_RIGHT:
+                    direction = 0
                     lead_x_change = block_size
                     lead_y_change = 0
                 elif event.key == pygame.K_UP:
+                    direction = 2
                     lead_x_change = 0
                     lead_y_change = -block_size
                 elif event.key == pygame.K_DOWN:
+                    direction = 3
                     lead_x_change = 0
                     lead_y_change = block_size
 
@@ -106,7 +140,7 @@ def gameLoop():
         if len(snakeList) > snakeLength:
             del snakeList[0]
 
-        for eachCoord in snakeList[:-1]: #all coordinates in the list but excluding the head coord
+        for eachCoord in snakeList[:-1]: 
             if eachCoord == snakeHead:
                 gameOver = True
 
