@@ -33,8 +33,8 @@ def keysGen():
     return chr(key)
 
 def positionGen():
-    posX = random.randrange(displayX)
-    posY = random.randrange(displayY)
+    pos = random.randrange(300)
+    return int(pos)
 
 def text_objects(text,color,size):
     if size == "small":
@@ -47,9 +47,9 @@ def text_objects(text,color,size):
         textSurface = titleFontblack.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
-def screen_message(msg,color,y_displace=0,size="small"):
+def screen_message(msg,color,x_pos,y_pos,size="small"):
     textSurf, textRect = text_objects(msg,color,size)
-    textRect.center = (displayX/2),(displayY /2)+y_displace
+    textRect.center = (displayX/2)+x_pos,(displayY /2)+y_pos
     mkDisplay.blit(textSurf,textRect)
 
 def gameStart():
@@ -65,23 +65,46 @@ def gameStart():
                     start = False
 
         mkDisplay.fill(black)
-        screen_message("Welcome to ..",red,-100,"small")
-        screen_message("MUSIKEYS",white,0,"title")
-        screen_message("do not worry, you will know how to play it.",red,100,"small")
-        screen_message("PRESS SPACE TO CONTINUE.",green,200,"small")
+        screen_message("Welcome to ..",red,0,-100,"small")
+        screen_message("MUSIKEYS",white,0,0,"title")
+        screen_message("do not worry, you will know how to play it.",red,0,100,"small")
+        screen_message("PRESS SPACE TO CONTINUE.",green,0,200,"small")
         pygame.display.update()
         clock.tick(15)
 
 def gameLoop():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
+    gameOver = False
+    gameExit = False
 
-    mkDisplay.fill(white)
 
-    pygame.quit()
-    quit()
+    while not gameExit:
+        if gameOver == True:
+            screen_message("Game Over",red,0,0,size="large")
+            while gameOver == True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if newKey.lower() == pygame.key.name(event.key):
+                    print("True")
+                    screen_message(newKey,white,0,0,size="small")
+                    # pygame.display.update()
+                else:
+                    print(newKey)
+                    pygame.quit()
+                    quit()
+
+
+    mkDisplay.fill(black)
+    pygame.display.update()
+
+
 
 gameStart()
-print(keysGen())
+gameLoop()
