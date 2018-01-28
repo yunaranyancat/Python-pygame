@@ -1,13 +1,16 @@
 import pygame
 import time
 import random
-#Creating Tanks from Slither script
+#Button intro
 
 pygame.init()
+
 white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
-green = (0,155,0)
+yellow = (200,200,0)
+green = (34,177,76)
+
 clock = pygame.time.Clock()
 
 display_width = 800
@@ -91,14 +94,15 @@ def game_intro():
                           -100,
                           "large")
 
-        message_to_screen("The objective is to shoot and destroy the enemy tank before they destroy you",
+        message_to_screen("Shoot and destroy the enemy tank before they destroy you",
                           black,
                           0)
 
-        message_to_screen("Press C to play or Q to quit or P to pause while playing",
-                          black,
-                          90)
+        #message_to_screen("Press C to play or Q to quit or P to pause while playing",black,90)
 
+        pygame.draw.rect(gameDisplay,green,(150,500,100,50))
+        pygame.draw.rect(gameDisplay,yellow,(350,500,100,50))
+        pygame.draw.rect(gameDisplay,red,(550,500,100,50))
 
         pygame.display.update()
         clock.tick(15)
