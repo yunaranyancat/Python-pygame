@@ -248,4 +248,4 @@ def gameLoop():
     quit()
 
 game_intro()
-#gameLoop()
+gameLoop()

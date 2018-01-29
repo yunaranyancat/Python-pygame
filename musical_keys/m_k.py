@@ -73,11 +73,15 @@ def gameStart():
         clock.tick(15)
 
 def gameLoop():
+
+    score = 0
     gameOver = False
     gameExit = False
 
-
     while not gameExit:
+        newKey = keysGen()
+        noUserInput = True
+
         if gameOver == True:
             screen_message("Game Over",red,0,0,size="large")
             while gameOver == True:
@@ -86,24 +90,29 @@ def gameLoop():
                         pygame.quit()
                         quit()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if newKey.lower() == pygame.key.name(event.key):
-                    print("True")
-                    screen_message(newKey,white,0,0,size="small")
-                    # pygame.display.update()
-                else:
-                    print(newKey)
+        mkDisplay.fill(black)
+        screen_message(newKey,red,positionGen(),positionGen(),size="small")
+        pygame.display.update()
+
+
+        while noUserInput :
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+                if event.type == pygame.KEYDOWN:
+                    if newKey.lower() == pygame.key.name(event.key):
+                        score +=1
+                        print(score)
+                        noUserInput = False
+                    else:
+                        score -=1
+                        print(score)
+                        noUserInput = False
 
 
-    mkDisplay.fill(black)
-    pygame.display.update()
-
+    pygame.quit()
+    quit()
 
 
 gameStart()
