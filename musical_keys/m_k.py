@@ -1,8 +1,10 @@
 import pygame
+import pygame.mixer
 import random
 import time
 
 pygame.init()
+pygame.mixer.init()
 
 #color config
 white = (255,255,255)
@@ -27,6 +29,10 @@ largeFontgiveme = pygame.font.Font('./fonts/givemeahand/GiveMeAHand.ttf',90)
 
 #clock config
 clock = pygame.time.Clock()
+
+#PURRRR
+nyansound = pygame.mixer.Sound("./sounds/nyan.wav")
+evilsound = pygame.mixer.Sound("./sounds/maniac.wav")
 
 def keysGen():
     key = random.randrange(65,90)
@@ -85,6 +91,7 @@ def gameLoop():
         if gameOver == True:
             mkDisplay.fill(black)
             screen_message("Game Over",red,0,0,size="large")
+            screen_message("Final score : "+str(score),white,150,300,"medium")
             pygame.display.update()
 
         while gameOver == True:
@@ -95,6 +102,8 @@ def gameLoop():
 
         mkDisplay.fill(black)
         screen_message(newKey,red,positionGen(),positionGen(),size="small")
+        screen_message("Score : "+str(score),white,-250,-300,"medium")
+        #screen_message("Timer : "+str(score),white,200,-300,"medium")
         pygame.display.update()
 
 
@@ -105,18 +114,18 @@ def gameLoop():
                     quit()
                 if event.type == pygame.KEYDOWN:
                     if newKey.lower() == pygame.key.name(event.key):
+                        nyansound.play()
                         score +=1
-                        print(score)
+                        #print(score)
                         noUserInput = False
                     else:
-                        score -=1
-                        print(score)
+                        evilsound.play()
                         noUserInput = False
-            if score<0 :
-                gameOver=True
+                        gameOver = True
 
 
     pygame.quit()
+    pygame.mixer.quit()
     quit()
 
 
