@@ -80,18 +80,30 @@ def gameStart():
 
 def gameLoop():
 
+    start = pygame.time.get_ticks()
     score = 0
     gameOver = False
     gameExit = False
 
     while not gameExit:
+
+        timer = 60
+        seconds_passed = (pygame.time.get_ticks() - start)/1000
+        print(seconds_passed)
+        timer = int(timer - seconds_passed)
+        if timer < 0:
+            gameOver = True
+
+
         newKey = keysGen()
         noUserInput = True
 
+
         if gameOver == True:
+            evilsound.play()
             mkDisplay.fill(black)
             screen_message("Game Over",red,0,0,size="large")
-            screen_message("Final score : "+str(score),white,150,300,"medium")
+            screen_message("Final score : "+str(score),white,150,250,"medium")
             pygame.display.update()
 
         while gameOver == True:
@@ -103,9 +115,8 @@ def gameLoop():
         mkDisplay.fill(black)
         screen_message(newKey,red,positionGen(),positionGen(),size="small")
         screen_message("Score : "+str(score),white,-250,-300,"medium")
-        #screen_message("Timer : "+str(score),white,200,-300,"medium")
+        screen_message("Timer : "+str(timer),white,250,-300,"medium")
         pygame.display.update()
-
 
         while noUserInput :
             for event in pygame.event.get():
@@ -116,10 +127,8 @@ def gameLoop():
                     if newKey.lower() == pygame.key.name(event.key):
                         nyansound.play()
                         score +=1
-                        #print(score)
                         noUserInput = False
                     else:
-                        evilsound.play()
                         noUserInput = False
                         gameOver = True
 
