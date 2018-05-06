@@ -18,7 +18,7 @@ displayX = 800
 displayY = 800
 
 mkDisplay = pygame.display.set_mode((displayX,displayY))
-pygame.display.set_caption("MKeys")
+pygame.display.set_caption("NyanTapMe")
 
 #font config
 titleFontblack = pygame.font.Font('./fonts/black/black.ttf',70)
@@ -34,6 +34,7 @@ clock = pygame.time.Clock()
 #PURRRR
 nyansound = pygame.mixer.Sound("./sounds/nyan.wav")
 evilsound = pygame.mixer.Sound("./sounds/maniac.wav")
+
 
 #Functionsssssss
 def keysGen():
@@ -150,8 +151,11 @@ def gameLoop():
 #let's go
 
 def main():
-    gameStart()
-    gameLoop()
+    try:
+        gameStart()
+        gameLoop()
+    except (pygame.error, Exception) as message:
+        pass
 
 if __name__ == '__main__':
     main()
